@@ -39,7 +39,7 @@ form.addEventListener('submit', (e) => {
 })
 
 const getMovie = (userSearch) => {
-  return fetch(`http://www.omdbapi.com/?apikey=678105a7&s=${userSearch}`)
+  return fetch(`https://www.omdbapi.com/?apikey=678105a7&s=${userSearch}`)
   .then((results) => 
     results.json()
   )
