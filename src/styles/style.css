@@ -99,6 +99,17 @@ p {
   text-align: justify;
 }
 
+.pagination {
+  cursor: pointer;
+  font-size: 20px;
+  padding-left: 2em;
+  padding-right: 2em;
+  display: none;
+  justify-content: space-around;
+  color: #dc1928;
+  margin-bottom: 2em;
+}
+
 @media only screen and (min-width: 768px) {
   header {
     justify-content: space-around;
@@ -148,7 +159,7 @@ p {
   .movie-container {
     width: 1440px;
     padding-left: 5em;
-    padding-right: 5em;
+    padding-right: 1em;
   }
 
   header {
@@ -181,7 +192,7 @@ p {
 
   .details {
     width: 298px;
-    height: 417px;
+    height: 448px;
   }
 }
 
