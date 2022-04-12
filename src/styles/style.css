@@ -11,6 +11,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Martel Sans', sans-serif;
 }
 
 body {
@@ -100,14 +101,23 @@ p {
 }
 
 .pagination {
+  display: flex;
   cursor: pointer;
   font-size: 20px;
   padding-left: 2em;
   padding-right: 2em;
-  display: none;
   justify-content: space-around;
   color: #dc1928;
   margin-bottom: 2em;
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  background-color: transparent;
+  color:#dc1928;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 @media only screen and (min-width: 768px) {
@@ -121,7 +131,7 @@ p {
     margin-bottom: 2em;
   }
 
-  .movie-container {
+  .movie-thumb {
     width: 768px;
     padding-left: 4.3em;
     padding-right: 4.3em;
@@ -133,7 +143,7 @@ p {
 }
 
 @media only screen and (min-width: 1024px) {
-  .movie-container {
+  .movie-thumb {
     width: 1024px;
     padding-left: 4.3em;
     padding-right: 4.3em;
@@ -156,7 +166,7 @@ p {
 }
 
 @media only screen and (min-width: 1440px) {
-  .movie-container {
+  .movie-thumb {
     width: 1440px;
     padding-left: 5em;
     padding-right: 1em;
@@ -197,7 +207,7 @@ p {
 }
 
 @media only screen and (min-width: 1920px) {
-  .movie-container {
+  .movie-thumb {
     width: 1920px;
     padding-left: 5em;
     padding-right: 5em;
@@ -223,6 +233,10 @@ p {
     width: 410px;
   }
 
+  .movie {
+    margin-right: 2em;
+  }
+
   .movie-thumb {
     justify-content:space-between;
   }
@@ -237,3 +251,25 @@ p {
   }
 }
 
+@media only screen and (min-width: 2260px) {
+  .movie-thumb {
+    width: 2290px;
+    padding-left: 5em;
+    padding-right: 5em;
+    margin-left: 3.5em;
+  }
+
+  .movie > img {
+    width: 385px;
+    height: 539.5px;
+  }
+
+  .movie {
+    margin-right: 2em;
+  }
+
+  .details {
+    height: 539.5px;
+    width: 385px;
+  }
+}

@@ -8,12 +8,13 @@ movieContainer.addEventListener('mouseout', (e) => {
     e.target.closest('li').lastElementChild.style.display = "none";
 })
 
-const getMovie = (userSearch, currentPage) => {
-  return fetch(`https://www.omdbapi.com/?apikey=678105a7&s=${userSearch}&page=${currentPage}`)
-  .then((results) => 
-    results.json()
-  )
-  .then((data) => data.Search);
+
+let page = 1;
+let userSearch;
+
+const getMovie = (userSearch) => {
+  return fetch(`https://www.omdbapi.com/?apikey=678105a7&s=${userSearch}&page=${page}`)
+  .then((results) => results.json());
 }
 
 const getMovieDetails = (movieId) => {
@@ -21,82 +22,86 @@ const getMovieDetails = (movieId) => {
   .then(resp => resp.json())
 }
 
+const generateMovieHTML = (movie) => {
+  movieContainer.insertAdjacentHTML(
+    'beforeend',
+    `
+    <li class="movie">
+      <img src="${movie.Poster === 'N/A' ? "images/freddy-flix.png" : movie.Poster}" alt="">
+      <div class="details">
+        <h2 class="title">${movie.Title}</h2>
+        <h3 class="rating">Rating: ${movie.imdbRating}/10</h3>
+        <p class="plot">
+          "${movie.Plot}"
+        </p>
+      </div>
+    </li>
+    `
+  ) 
+}
+
 const populateMovieList = (movies) => {
   movieContainer.textContent ="";
-  movies.forEach(movie => {
+  movies.Search.forEach(movie => {
     getMovieDetails(movie.imdbID)
     .then((movie) =>{
-      movieContainer.insertAdjacentHTML(
-        'beforeend',
-        `
-        <li class="movie">
-          <img src="${movie.Poster === 'N/A' ? "images/freddy-flix.png" : movie.Poster}" alt="">
-          <div class="details">
-            <h2 class="title">${movie.Title}</h2>
-            <h3 class="rating">Rating: ${movie.imdbRating}/10</h3>
-            <p class="plot">
-              "${movie.Plot}"
-            </p>
-          </div>
-        </li>
-        `
-      ) 
-    })
-  })
+      generateMovieHTML(movie);
+    });
+  });
+  updatePaginationHTML(movies.totalResults);
+}
+
+function updatePaginationHTML(totalResults) {
+  const paginationEl = document.querySelector('.pagination');
+  paginationEl.textContent = '';
+
+  if (page !== 1) {
+    paginationEl.insertAdjacentHTML(
+      'beforeend',
+      `
+      <button id="prev"><i class="fa fa-chevron-left"></i>Previous Page</button>
+      `
+    );
+  }
+  console.log(totalResults);
+  if (page * 10 < totalResults) {
+    paginationEl.insertAdjacentHTML(
+      'beforeend',
+      `
+      <button id="next">Next Page<i class="fa fa-chevron-right"></i></button>
+      `
+    );
+  }
+}
+
+function updatePageNumber(direction) {
+  if (direction === 'prev') {
+    page--;
+  }
+
+  if (direction === 'next') {
+    page++;
+  }
 }
 
 const handleSearch = (event) => {
   event.preventDefault();
-  const userSearch = document.querySelector('#search-pane').value
-  const pagination = document.querySelector('.pagination');
-  const prev = document.querySelector('.prev');
-  const next = document.querySelector('.next');
-  let currentPage = 1;
-  getTotalResults(userSearch)
-  .then((data) => {
-    if (data < 12) {
-      pagination.style.display = "none";
-    }
-    
-    if (data > 12) {
-      pagination.style.display = "flex";
-      prev.style.display = "none";
-      next.style.display = "block";
-    }    
-  })
-  getMovie(userSearch, currentPage)
+  userSearch = document.querySelector('#search-pane').value
+  getMovie(userSearch)
   .then((movies) => populateMovieList(movies));
-
-  next.addEventListener('click', () => {
-    currentPage++;
-    prev.style.display = "block";
-    getMovie(userSearch, currentPage)
-    .then((movies) => populateMovieList(movies));
-    console.log(currentPage);
-  });
-
-  prev.addEventListener('click', () => {
-    currentPage--;
-    if (currentPage === 1) {
-      prev.style.display = "none";
-    }
-    getMovie(userSearch, currentPage)
-    .then((movies) => populateMovieList(movies));
-    console.log(currentPage);
-  });
 }
 
-const getTotalResults = (userSearch) => {
-  return fetch(`https://www.omdbapi.com/?apikey=678105a7&s=${userSearch}`)
-  .then((results) => 
-    results.json()
-  )
-  .then((data) => data.totalResults);
+function handlePaginationClick(event) {
+  updatePageNumber(event.target.id);
+  getMovie(userSearch).then((results) => populateMovieList(results));
 }
 
 const form = document.querySelector('form')
 form.addEventListener('submit', handleSearch);
 
+document
+  .querySelector('.pagination')
+  .addEventListener('click', handlePaginationClick);
 
 // math.ceil(totalResults / 10) > pageNumber
 // page numbers
